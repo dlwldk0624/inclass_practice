@@ -1,0 +1,1219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Habit Quest</title>
+<style>
+:root {
+  --primary:#4166e8;
+  --primary-light:#edf2ff;
+  --ink:#1e2d49;
+  --muted:#63738c;
+  --line:#dfe6f0;
+  --background:#f5f7fb;
+  --green:#157c60;
+  --green-light:#e9f8f0;
+  --red:#bf4141;
+  --red-light:#fff0f0;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  background:var(--background);
+  color:var(--ink);
+  line-height:1.65;
+}
+button,select,textarea { font:inherit; }
+button { cursor:pointer; }
+button:focus-visible,select:focus-visible,textarea:focus-visible {
+  outline:3px solid #96adff;
+  outline-offset:3px;
+}
+.app { max-width:760px; margin:auto; padding:18px 14px 56px; }
+header { text-align:center; margin-bottom:20px; }
+.brand {
+  display:inline-block;
+  background:var(--primary-light);
+  color:var(--primary);
+  padding:5px 14px;
+  border-radius:24px;
+  font-size:12px;
+  font-weight:800;
+}
+h1 { margin:8px 0 2px; font-size:clamp(27px,5vw,36px); }
+h2 { margin:5px 0 10px; font-size:clamp(22px,4vw,27px); }
+h3 { font-size:18px; margin:14px 0 8px; }
+p { margin:8px 0 13px; }
+.muted,.ko { color:var(--muted); font-size:14px; }
+.card {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:15px;
+}
+.tracker { padding:17px 20px; }
+.tracker-top {
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+  font-size:13px;
+  font-weight:800;
+}
+.bar {
+  height:9px;
+  background:#e9edf5;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:12px;
+}
+.bar-fill {
+  height:100%;
+  width:0%;
+  background:var(--primary);
+  transition:width .2s;
+}
+.steps { display:flex; gap:5px; margin-top:12px; }
+.step {
+  flex:1;
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  padding:6px 2px;
+  background:#f1f3f8;
+  border-radius:7px;
+  color:#8a95a6;
+}
+.step.active { background:var(--primary-light); color:var(--primary); }
+.step.done { background:var(--green-light); color:var(--green); }
+.tag { color:var(--primary); font-size:12px; font-weight:800; }
+.hidden { display:none !important; }
+.btn {
+  border:0;
+  padding:13px 17px;
+  min-height:48px;
+  border-radius:11px;
+  font-weight:800;
+  font-size:15px;
+}
+.primary { background:var(--primary); color:white; flex:1; }
+.secondary { background:#edf0f6; color:var(--ink); }
+.btn:disabled { opacity:.45; cursor:not-allowed; }
+.actions { display:flex; gap:9px; margin-top:23px; }
+.note {
+  background:var(--primary-light);
+  padding:14px 16px;
+  border-radius:11px;
+  margin:16px 0;
+  font-size:14px;
+}
+.warning { background:#fff5dc; color:#74551b; }
+.success { background:var(--green-light); color:#10654c; }
+.story {
+  background:#fffdf1;
+  border-left:4px solid #e3b537;
+  border-radius:9px;
+  padding:19px;
+  font-size:16px;
+  line-height:2.05;
+  margin:18px 0;
+}
+.story p { margin-bottom:12px; }
+.story p:last-child { margin-bottom:0; }
+.target {
+  color:#2457d7;
+  background:#e7edff;
+  border-radius:4px;
+  padding:2px 4px;
+  font-weight:800;
+}
+.audio-box {
+  background:#eef3ff;
+  border:1px solid #d6e1ff;
+  border-radius:13px;
+  padding:15px;
+  margin:17px 0;
+}
+.audio-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.audio-btn {
+  background:white;
+  color:#2854b2;
+  border:1px solid #c8d6f7;
+  border-radius:9px;
+  min-height:42px;
+  padding:9px 12px;
+  font-size:13px;
+  font-weight:800;
+}
+.audio-btn:disabled { opacity:.4; cursor:not-allowed; }
+.audio-btn.main { background:var(--primary); color:white; border-color:var(--primary); }
+.audio-status { font-size:12px; color:#51658f; margin-top:9px; }
+.speed-row { display:flex; gap:7px; margin-top:9px; }
+.speed {
+  flex:1;
+  background:white;
+  border:1px solid #ccd6e8;
+  border-radius:9px;
+  padding:9px 4px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+.speed.active {
+  background:#dce7ff;
+  border-color:var(--primary);
+  color:#274bb5;
+}
+.vocab-list { display:grid; gap:11px; margin-top:17px; }
+.vocab {
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:16px;
+}
+.vocab-title { font-size:19px; font-weight:800; }
+.meaning { color:var(--green); font-size:14px; font-weight:700; }
+.example {
+  background:#f7f9fd;
+  padding:10px;
+  border-radius:8px;
+  font-size:14px;
+  margin-top:8px;
+}
+.quiz-top { display:flex; justify-content:space-between; gap:8px; font-size:14px; color:var(--primary); font-weight:800; }
+.question { font-weight:800; font-size:21px; line-height:1.5; margin:20px 0; }
+.choices { display:grid; gap:10px; margin-top:15px; }
+.choice {
+  width:100%;
+  background:white;
+  border:2px solid var(--line);
+  border-radius:11px;
+  padding:14px;
+  color:var(--ink);
+  text-align:left;
+  font-size:15px;
+  font-weight:600;
+}
+.choice:hover:not(:disabled) { border-color:#8ca6f5; }
+.choice.correct { border-color:var(--green); background:var(--green-light); }
+.choice.wrong { border-color:var(--red); background:var(--red-light); }
+.choice:disabled { opacity:1; cursor:default; }
+.feedback { padding:15px; border-radius:10px; margin-top:16px; font-size:14px; }
+.feedback.correct { background:var(--green-light); color:#10654c; }
+.feedback.wrong { background:var(--red-light); color:#a52d2d; }
+.field { margin:20px 0; }
+label { display:block; font-weight:800; margin-bottom:8px; }
+select,textarea {
+  width:100%;
+  border:2px solid var(--line);
+  border-radius:10px;
+  padding:12px;
+  color:var(--ink);
+  background:white;
+}
+textarea { min-height:105px; resize:vertical; line-height:1.6; }
+.hint { font-size:13px; color:var(--muted); margin-top:6px; }
+.expression-bank { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0; }
+.chip {
+  font-size:12px;
+  font-weight:800;
+  background:var(--primary-light);
+  color:#2854b2;
+  padding:6px 10px;
+  border-radius:20px;
+}
+.preview { background:#f7f9fd; padding:15px; border-radius:11px; margin:14px 0; }
+.preview p { overflow-wrap:anywhere; white-space:pre-wrap; }
+.score-box {
+  background:var(--primary-light);
+  text-align:center;
+  border-radius:14px;
+  padding:22px;
+  margin:18px 0;
+}
+.score-number { font-size:58px; font-weight:900; color:var(--primary); }
+.review { border-bottom:1px solid var(--line); padding:13px 0; }
+.review p { margin:4px 0; font-size:14px; }
+.good { color:var(--green); }
+.bad { color:var(--red); }
+footer { text-align:center; font-size:12px; color:var(--muted); padding:12px; }
+@media(max-width:520px) {
+  .app { padding:10px 9px 36px; }
+  .card { padding:18px 16px; }
+  .story { padding:14px; font-size:15px; }
+  .question { font-size:19px; }
+  .step { font-size:10px; }
+  .audio-row { gap:6px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  * { transition:none !important; }
+}
+</style>
+</head>
+<body>
+
+<main class="app">
+<header>
+  <span class="brand">ENGLISH LEARNING</span>
+  <h1>Study Habit Quest</h1>
+  <div class="muted">Listen · Learn · Practice · Apply</div>
+</header>
+
+<div class="card tracker">
+  <div class="tracker-top">
+    <span id="progressText">Progress 0%</span>
+    <span id="timer">Time 00:00</span>
+    <span id="scoreText">Score 0/12</span>
+  </div>
+  <div class="bar" id="progressTrack" role="progressbar"
+       aria-label="Learning progress"
+       aria-valuemin="0" aria-valuemax="100"
+       aria-valuenow="0">
+    <div class="bar-fill" id="progressFill"></div>
+  </div>
+  <div class="steps">
+    <div class="step active">Listen</div>
+    <div class="step">Learn</div>
+    <div class="step">Quiz</div>
+    <div class="step">Apply</div>
+    <div class="step">Result</div>
+  </div>
+</div>
+
+<!-- READING -->
+<section class="card" id="readPage">
+  <div class="tag">STEP 1 · ABOUT 2 MIN</div>
+  <h2>Meet Jisoo!</h2>
+  <p>Listen to Jisoo's story and find six useful expressions.</p>
+  <p class="ko">이야기를 듣고 파란색 영어 표현 6개를 찾아보세요.</p>
+
+  <div class="audio-box">
+    <strong>🔊 Listen to the Story</strong>
+    <div class="ko">화면을 보지 않고 이야기를 먼저 들어봐도 좋아요.</div>
+    <div class="audio-row">
+      <button class="audio-btn main" id="storyPlay">▶ Play Story</button>
+      <button class="audio-btn" id="storyPause" disabled>⏸ Pause</button>
+      <button class="audio-btn" id="storyReplay">↻ Replay</button>
+      <button class="audio-btn" id="storyStop" disabled>■ Stop</button>
+    </div>
+    <div class="audio-status" id="storyStatus" role="status">Press Play to listen.</div>
+  </div>
+
+  <div class="story">
+    <p>Jisoo wanted to improve her study habits before the exam period.
+    She began to <span class="target">keep track of</span>
+    how long she studied each day.</p>
+
+    <p>She also learned when to
+    <span class="target">take a break</span>
+    instead of studying for too long.</p>
+
+    <p>While studying, she tried to
+    <span class="target">stay away from</span>
+    her phone and made sure to
+    <span class="target">get enough sleep</span>.</p>
+
+    <p>When she felt stressed, she learned how to
+    <span class="target">deal with</span>
+    it by taking a short walk.</p>
+
+    <p>After several weeks, she found it easier to
+    <span class="target">stick to</span>
+    her new routine.</p>
+  </div>
+
+  <div class="note">
+    <strong>Think!</strong>
+    <p>What helped Jisoo study better?</p>
+    <span class="ko">지수는 공부 습관을 개선하기 위해 무엇을 했나요?</span>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="goLearn">Next →</button>
+  </div>
+</section>
+
+<!-- VOCABULARY -->
+<section class="card hidden" id="learnPage">
+  <div class="tag">STEP 2 · ABOUT 2 MIN</div>
+  <h2>Learn 6 Expressions</h2>
+  <p>Listen and say each expression aloud.</p>
+  <p class="ko">각 표현과 예문을 듣고 소리 내어 따라 말해 보세요.</p>
+  <div class="vocab-list" id="vocabList"></div>
+
+  <div class="actions">
+    <button class="btn secondary" id="backRead">← Back</button>
+    <button class="btn primary" id="goQuiz">Start Quiz →</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="card hidden" id="quizPage">
+  <div class="tag">STEP 3 · ABOUT 4 MIN</div>
+  <h2>Expression Challenge</h2>
+  <div class="quiz-top">
+    <span id="quizPart">Part A · Meaning</span>
+    <span id="quizNumber">1 / 12</span>
+  </div>
+  <div class="bar"><div class="bar-fill" id="quizBar"></div></div>
+  <p class="ko" id="quizInstruction"></p>
+  <div class="question" id="question"></div>
+  <button class="audio-btn" id="questionAudio">🔊 Listen to Question</button>
+  <div class="choices" id="choices"></div>
+  <div class="feedback hidden" id="feedback" role="status" aria-live="polite"></div>
+  <div class="actions">
+    <button class="btn primary" id="nextQuiz" disabled>Next →</button>
+  </div>
+</section>
+
+<!-- APPLICATION -->
+<section class="card hidden" id="applyPage">
+  <div class="tag">STEP 4 · ABOUT 2 MIN</div>
+  <h2>My Study Habits</h2>
+  <p>Write two sentences about your study habits.</p>
+  <p class="ko">자신의 공부 습관에 관한 영어 문장 2개를 작성해 보세요.</p>
+
+  <div class="note">
+    <strong>Your Mission</strong>
+    <p>Use two different expressions from the Expression Bank.</p>
+    <span class="ko">서로 다른 목표 표현을 사용해 두 문장을 작성하세요. 도움이 필요하면 문장 시작 표현을 사용하세요.</span>
+  </div>
+
+  <h3>Expression Bank</h3>
+  <div class="expression-bank" id="expressionBank"></div>
+
+  <div class="field">
+    <label for="writingOne">1. A good study habit I have</label>
+    <p class="ko">내가 실천하고 있는 좋은 공부 습관</p>
+
+    <select id="starterOne">
+      <option value="">Need help? Choose a sentence starter.</option>
+      <option value="I try to ">I try to ...</option>
+      <option value="I usually ">I usually ...</option>
+      <option value="Every day, I ">Every day, I ...</option>
+      <option value="When I study, I ">When I study, I ...</option>
+    </select>
+
+    <textarea id="writingOne" maxlength="400"
+      placeholder="I try to get enough sleep every night."></textarea>
+    <div class="hint">Example: I take a break after studying.</div>
+  </div>
+
+  <div class="field">
+    <label for="writingTwo">2. A study habit I want to improve</label>
+    <p class="ko">앞으로 개선하고 싶은 공부 습관</p>
+
+    <select id="starterTwo">
+      <option value="">Need help? Choose a sentence starter.</option>
+      <option value="I want to ">I want to ...</option>
+      <option value="I need to ">I need to ...</option>
+      <option value="I will try to ">I will try to ...</option>
+      <option value="Next week, I will ">Next week, I will ...</option>
+    </select>
+
+    <textarea id="writingTwo" maxlength="400"
+      placeholder="I want to stick to my study plan."></textarea>
+    <div class="hint">Example: I want to stay away from my phone.</div>
+  </div>
+
+  <div class="audio-row">
+    <button class="audio-btn" id="writingAudio">🔊 Listen to My Writing</button>
+  </div>
+
+  <div id="writingFeedback" role="status" aria-live="polite"></div>
+
+  <div class="actions">
+    <button class="btn primary" id="finishButton">See My Results →</button>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="card hidden" id="resultPage">
+  <div class="tag">MISSION COMPLETE</div>
+  <h2>Great Job!</h2>
+  <p>You completed your Study Habit Quest!</p>
+  <p class="ko">학습을 완료했어요! 결과를 확인해 보세요.</p>
+
+  <div class="score-box">
+    <strong>My Quiz Score</strong>
+    <div class="score-number" id="finalScore">0 / 12</div>
+    <p id="scoreMessage"></p>
+    <span id="finalTime"></span>
+  </div>
+
+  <h3>My Study Habits</h3>
+  <div class="preview">
+    <p id="resultOne"></p>
+    <p id="resultTwo"></p>
+    <button class="audio-btn" id="resultAudio">🔊 Listen to My Sentences</button>
+  </div>
+
+  <div class="note">
+    <strong>Self-Check</strong>
+    <p>Do my sentences make sense? Did I use the expressions correctly?</p>
+    <span class="ko">앱은 표현 사용 여부만 확인해요. 문장의 의미와 문법은 스스로 다시 점검해 보세요.</span>
+  </div>
+
+  <h3>Review My Quiz</h3>
+  <div id="reviewList"></div>
+
+  <div class="actions">
+    <button class="btn primary" id="restartButton">Try Again ↻</button>
+  </div>
+</section>
+
+<!-- UNIVERSAL AUDIO SETTINGS -->
+<section class="audio-box" aria-label="Audio settings">
+  <strong>🎧 Listening Speed</strong>
+  <p class="ko">편한 속도를 선택하세요. 기본 속도는 Learning 0.85×입니다.</p>
+  <div class="speed-row">
+    <button class="speed" data-speed="0.7" aria-pressed="false">Slow<br>0.70×</button>
+    <button class="speed active" data-speed="0.85" aria-pressed="true">Learning<br>0.85×</button>
+    <button class="speed" data-speed="1" aria-pressed="false">Natural<br>1.00×</button>
+  </div>
+  <div class="audio-status" id="audioStatus" role="status" aria-live="polite">
+    Recommended: Learning (0.85×)
+  </div>
+  <button class="audio-btn" id="stopAllAudio" disabled>■ Stop Audio</button>
+</section>
+
+<footer>Study Habit Quest · Grade 8 EFL · 10-minute Individual Activity</footer>
+</main>
+
+<script>
+"use strict";
+
+/* =========================
+   CONTENT
+========================= */
+
+const vocabulary = [
+  { word:"keep track of", meaning:"기록하거나 계속 확인하다", example:"I keep track of my study time." },
+  { word:"take a break", meaning:"휴식을 취하다", example:"I take a break after studying." },
+  { word:"stay away from", meaning:"~을 멀리하다 / 피하다", example:"I stay away from my phone." },
+  { word:"get enough sleep", meaning:"충분한 수면을 취하다", example:"I get enough sleep every night." },
+  { word:"deal with", meaning:"~에 대처하다 / 다루다", example:"I deal with stress by walking." },
+  { word:"stick to", meaning:"~을 꾸준히 지키다", example:"I stick to my study plan." }
+];
+
+const story = [
+  "Jisoo wanted to improve her study habits before the exam period.",
+  "She began to keep track of how long she studied each day.",
+  "She also learned when to take a break instead of studying for too long.",
+  "While studying, she tried to stay away from her phone and made sure to get enough sleep.",
+  "When she felt stressed, she learned how to deal with it by taking a short walk.",
+  "After several weeks, she found it easier to stick to her new routine."
+];
+
+const questions = [
+  {part:"A",q:"What does 'keep track of' mean?",options:["잊어버리다","기록하거나 계속 확인하다","잠을 자다","계획을 포기하다"],answer:1,explain:"keep track of는 정보를 기록하거나 계속 확인한다는 뜻이에요."},
+  {part:"A",q:"What does 'take a break' mean?",options:["시험을 준비하다","일찍 일어나다","휴식을 취하다","계획을 세우다"],answer:2,explain:"take a break는 잠시 하던 일을 멈추고 쉬는 것을 말해요."},
+  {part:"A",q:"What does 'stay away from' mean?",options:["~을 멀리하다","~에 집중하다","~을 기록하다","~을 계속하다"],answer:0,explain:"stay away from은 어떤 것을 피하거나 멀리한다는 뜻이에요."},
+  {part:"A",q:"What does 'get enough sleep' mean?",options:["늦게 잠들다","공부를 시작하다","스트레스를 받다","충분한 수면을 취하다"],answer:3,explain:"get enough sleep은 필요한 만큼 잠을 자는 것을 뜻해요."},
+  {part:"A",q:"What does 'deal with' mean?",options:["무언가를 잊다","문제나 상황에 대처하다","잠시 쉬다","계획을 지키다"],answer:1,explain:"deal with는 문제나 상황에 대처한다는 뜻이에요."},
+  {part:"A",q:"What does 'stick to' mean?",options:["무언가를 피하다","자주 변경하다","계획이나 규칙을 꾸준히 지키다","정보를 검색하다"],answer:2,explain:"stick to는 계획이나 습관을 계속 지킨다는 뜻이에요."},
+  {part:"B",q:"I use a notebook to ______ my study time.",options:["take a break","keep track of","deal with","stick to"],answer:1,explain:"공부 시간을 기록하는 상황이므로 keep track of가 적절해요."},
+  {part:"B",q:"I feel tired. I want to ______ for 10 minutes.",options:["get enough sleep","stay away from","stick to","take a break"],answer:3,explain:"잠시 쉬고 싶으므로 take a break가 정답이에요."},
+  {part:"B",q:"My phone distracts me. I try to ______ it.",options:["stay away from","deal with","keep track of","get enough sleep"],answer:0,explain:"휴대폰을 멀리하려는 상황이므로 stay away from이 정답이에요."},
+  {part:"B",q:"I go to bed early to ______.",options:["stick to","deal with","get enough sleep","take a break"],answer:2,explain:"일찍 자는 이유가 충분한 수면을 위한 것이에요."},
+  {part:"B",q:"I listen to music to ______ stress.",options:["keep track of","deal with","stick to","stay away from"],answer:1,explain:"스트레스에 대처한다는 의미로 deal with가 적절해요."},
+  {part:"B",q:"I made a study plan. I will try to ______ it.",options:["take a break","get enough sleep","keep track of","stick to"],answer:3,explain:"계획을 꾸준히 지킨다는 뜻으로 stick to가 정답이에요."}
+];
+
+/* =========================
+   DOM HELPERS
+========================= */
+
+const $ = id => document.getElementById(id);
+
+function node(tag, className, content) {
+  const e = document.createElement(tag);
+  e.className = className;
+  e.textContent = content;
+  return e;
+}
+
+/* =========================
+   AUDIO
+========================= */
+
+const audioSupported =
+  "speechSynthesis" in window &&
+  "SpeechSynthesisUtterance" in window;
+
+let speed = 0.85;
+let voice = null;
+let speechToken = 0;
+let speaking = false;
+let paused = false;
+let speechKind = "";
+let speechQueue = [];
+let speechPosition = 0;
+let speechPauseHandle = null;
+
+function chooseVoice() {
+  if (!audioSupported) return;
+
+  const english = speechSynthesis.getVoices()
+    .filter(v => /^en(?:-|$)/i.test(v.lang));
+
+  voice =
+    english.find(v => /^en-US$/i.test(v.lang) && v.localService) ||
+    english.find(v => /^en-US$/i.test(v.lang)) ||
+    english.find(v => v.localService) ||
+    english[0] ||
+    null;
+}
+
+function setStatus(message) {
+  $("audioStatus").textContent = message;
+}
+
+function updateAudioControls() {
+  const storyActive = speaking && speechKind === "story";
+
+  $("storyPause").disabled = !storyActive;
+  $("storyStop").disabled = !storyActive;
+  $("stopAllAudio").disabled = !speaking;
+
+  $("storyPause").textContent =
+    paused ? "▶ Resume" : "⏸ Pause";
+}
+
+function stopAudio() {
+  speechToken++;
+  speaking = false;
+  paused = false;
+  speechQueue = [];
+  speechPosition = 0;
+  speechKind = "";
+
+  if (speechPauseHandle !== null) {
+    clearTimeout(speechPauseHandle);
+    speechPauseHandle = null;
+  }
+
+  if (audioSupported) {
+    speechSynthesis.cancel();
+  }
+
+  $("storyStatus").textContent = "Audio stopped.";
+  updateAudioControls();
+}
+
+function finishAudio() {
+  speaking = false;
+  paused = false;
+  speechKind = "";
+  speechQueue = [];
+  speechPosition = 0;
+  updateAudioControls();
+  setStatus("Finished listening.");
+  $("storyStatus").textContent = "Finished listening.";
+}
+
+function speakNext(token) {
+  if (!audioSupported || token !== speechToken || !speaking || paused) {
+    return;
+  }
+
+  if (speechPosition >= speechQueue.length) {
+    finishAudio();
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(
+    speechQueue[speechPosition]
+  );
+
+  utterance.lang = "en-US";
+  utterance.rate = speed;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+
+  if (voice) utterance.voice = voice;
+
+  utterance.onend = () => {
+    if (token !== speechToken || !speaking) return;
+
+    speechPosition++;
+
+    if (speechPosition >= speechQueue.length) {
+      finishAudio();
+      return;
+    }
+
+    speechPauseHandle = setTimeout(() => {
+      speechPauseHandle = null;
+      if (token === speechToken && speaking && !paused) {
+        speakNext(token);
+      }
+    }, 320);
+  };
+
+  utterance.onerror = event => {
+    if (token !== speechToken) return;
+
+    if (event.error === "canceled" || event.error === "interrupted") {
+      return;
+    }
+
+    stopAudio();
+    setStatus("Audio could not play. Check your browser's English voice settings.");
+  };
+
+  try {
+    speechSynthesis.speak(utterance);
+  } catch (error) {
+    stopAudio();
+    setStatus("Speech playback is unavailable on this device.");
+  }
+}
+
+function playAudio(texts, kind = "other") {
+  if (!audioSupported) {
+    setStatus("This browser does not support speech playback.");
+    return;
+  }
+
+  stopAudio();
+  chooseVoice();
+
+  speechQueue = (Array.isArray(texts) ? texts : [texts])
+    .map(text => String(text).trim())
+    .filter(Boolean);
+
+  if (!speechQueue.length) {
+    setStatus("There is no text to read.");
+    return;
+  }
+
+  speechKind = kind;
+  speaking = true;
+  paused = false;
+
+  const token = speechToken;
+
+  setStatus("Playing English audio...");
+  if (kind === "story") {
+    $("storyStatus").textContent = "Playing Jisoo's story...";
+  }
+
+  updateAudioControls();
+  speakNext(token);
+}
+
+function toggleStoryPause() {
+  if (!speaking || speechKind !== "story") return;
+
+  if (paused) {
+    paused = false;
+
+    if (speechPauseHandle === null && !speechSynthesis.paused) {
+      // A pause between sentences; continue the queue.
+      speechSynthesis.resume();
+      if (!speechSynthesis.speaking) {
+        speakNext(speechToken);
+      }
+    } else {
+      speechSynthesis.resume();
+    }
+
+    $("storyStatus").textContent = "Playing...";
+  } else {
+    paused = true;
+    speechSynthesis.pause();
+    $("storyStatus").textContent = "Paused.";
+  }
+
+  updateAudioControls();
+}
+
+/* =========================
+   TIMER AND STAGES
+========================= */
+
+const pages = [
+  "readPage","learnPage","quizPage","applyPage","resultPage"
+];
+
+let stage = 0;
+let questionIndex = 0;
+let score = 0;
+let locked = false;
+let answerHistory = [];
+let beganAt = null;
+let elapsed = 0;
+let timerHandle = null;
+let finished = false;
+
+function formatTime(seconds) {
+  return String(Math.floor(seconds / 60)).padStart(2,"0") +
+    ":" + String(seconds % 60).padStart(2,"0");
+}
+
+function updateTimer() {
+  if (beganAt !== null && !finished) {
+    elapsed = Math.floor((Date.now() - beganAt) / 1000);
+  }
+  $("timer").textContent = "Time " + formatTime(elapsed);
+}
+
+function beginTimer() {
+  if (beganAt !== null) return;
+  beganAt = Date.now();
+  timerHandle = setInterval(updateTimer, 1000);
+  updateTimer();
+}
+
+function stopTimer() {
+  if (timerHandle !== null) {
+    clearInterval(timerHandle);
+    timerHandle = null;
+  }
+  updateTimer();
+}
+
+function updateProgress() {
+  let percentage = 0;
+
+  if (stage === 1) percentage = 20;
+  if (stage === 2) percentage = 40 + 40 * questionIndex / 12;
+  if (stage === 3) percentage = 80;
+  if (stage === 4) percentage = 100;
+
+  percentage = Math.round(percentage);
+
+  $("progressFill").style.width = percentage + "%";
+  $("progressText").textContent = "Progress " + percentage + "%";
+  $("progressTrack").setAttribute("aria-valuenow",percentage);
+  $("scoreText").textContent = "Score " + score + "/12";
+}
+
+function goToStage(index) {
+  stopAudio();
+  stage = index;
+
+  pages.forEach((id,i) => {
+    $(id).classList.toggle("hidden",i !== index);
+  });
+
+  document.querySelectorAll(".step").forEach((e,i) => {
+    e.classList.toggle("active",i === index);
+    e.classList.toggle("done",i < index);
+  });
+
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =========================
+   VOCABULARY
+========================= */
+
+function renderVocabulary() {
+  const list = $("vocabList");
+  list.replaceChildren();
+
+  vocabulary.forEach((v,i) => {
+    const card = node("div","vocab","");
+    card.appendChild(node("div","vocab-title",(i+1)+". "+v.word));
+    card.appendChild(node("div","meaning",v.meaning));
+    card.appendChild(node("div","example",v.example));
+
+    const row = node("div","audio-row","");
+
+    const wordBtn = node("button","audio-btn","🔊 Expression");
+    wordBtn.type = "button";
+    wordBtn.addEventListener("click",() => playAudio(v.word));
+
+    const exampleBtn = node("button","audio-btn","🔊 Example");
+    exampleBtn.type = "button";
+    exampleBtn.addEventListener("click",() => playAudio(v.example));
+
+    row.append(wordBtn,exampleBtn);
+    card.appendChild(row);
+    list.appendChild(card);
+  });
+}
+
+function renderExpressionBank() {
+  $("expressionBank").replaceChildren(
+    ...vocabulary.map(v => node("span","chip",v.word))
+  );
+}
+
+/* =========================
+   QUIZ
+========================= */
+
+function renderQuiz() {
+  const q = questions[questionIndex];
+  locked = false;
+
+  $("quizPart").textContent =
+    q.part === "A" ? "Part A · Meaning" : "Part B · Context";
+
+  $("quizNumber").textContent = (questionIndex+1) + " / 12";
+  $("quizInstruction").textContent =
+    q.part === "A"
+      ? "표현의 올바른 한국어 뜻을 선택하세요."
+      : "빈칸에 들어갈 가장 알맞은 영어 표현을 선택하세요.";
+
+  $("question").textContent = q.q;
+  $("quizBar").style.width = (questionIndex / 12 * 100) + "%";
+  $("choices").replaceChildren();
+  $("feedback").className = "feedback hidden";
+  $("feedback").replaceChildren();
+  $("nextQuiz").disabled = true;
+  $("nextQuiz").textContent =
+    questionIndex === 11 ? "Next: My Study Habits →" : "Next →";
+
+  q.options.forEach((option,i) => {
+    const btn = node(
+      "button","choice",String.fromCharCode(65+i)+". "+option
+    );
+    btn.type = "button";
+    btn.addEventListener("click",() => checkAnswer(i));
+    $("choices").appendChild(btn);
+  });
+
+  updateProgress();
+}
+
+function checkAnswer(selected) {
+  if (locked) return;
+  locked = true;
+
+  const q = questions[questionIndex];
+  const correct = selected === q.answer;
+
+  if (correct) score++;
+
+  answerHistory.push({index:questionIndex,selected,correct});
+
+  $("choices").querySelectorAll("button").forEach((btn,i) => {
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add("correct");
+    else if (i === selected) btn.classList.add("wrong");
+  });
+
+  const fb = $("feedback");
+  fb.className = "feedback " + (correct ? "correct" : "wrong");
+
+  fb.appendChild(node(
+    "strong","",
+    correct ? "✓ Correct! 정답이에요!" : "✗ Good try! 다시 확인해 봐요."
+  ));
+
+  if (!correct) {
+    fb.appendChild(node("p","","정답: "+q.options[q.answer]));
+  }
+
+  fb.appendChild(node("p","",q.explain));
+
+  $("nextQuiz").disabled = false;
+  updateProgress();
+}
+
+/* =========================
+   WRITING
+========================= */
+
+const expressionPatterns = [
+  /\b(?:keep|keeps|keeping|kept)\s+track\s+of\b/i,
+  /\b(?:take|takes|taking|took)\s+(?:a|short)\s+break\b/i,
+  /\b(?:stay|stays|staying|stayed)\s+away\s+from\b/i,
+  /\b(?:get|gets|getting|got)\s+enough\s+sleep\b/i,
+  /\b(?:deal|deals|dealing|dealt)\s+with\b/i,
+  /\b(?:stick|sticks|sticking|stuck)\s+to\b/i
+];
+
+function usedExpressions(text) {
+  return expressionPatterns
+    .map((p,i) => p.test(text) ? i : -1)
+    .filter(i => i !== -1);
+}
+
+function insertStarter(selectId,textareaId) {
+  const starter = $(selectId).value;
+  const field = $(textareaId);
+
+  if (!starter) return;
+
+  const existing = field.value.trim();
+
+  if (!existing) {
+    field.value = starter;
+  } else if (!field.value.startsWith(starter)) {
+    // Do not erase work already written by the learner.
+    field.value = starter + existing;
+  }
+
+  field.focus();
+  field.setSelectionRange(field.value.length,field.value.length);
+  $(selectId).value = "";
+}
+
+function writingMessage(message) {
+  $("writingFeedback").replaceChildren(
+    node("div","note warning",message)
+  );
+}
+
+function getWriting() {
+  const a = $("writingOne").value.trim();
+  const b = $("writingTwo").value.trim();
+
+  if (!a || !b) {
+    writingMessage("영어 문장 2개를 모두 작성해 주세요.");
+    return null;
+  }
+
+  const aUsed = usedExpressions(a);
+  const bUsed = usedExpressions(b);
+
+  if (!aUsed.length || !bUsed.length) {
+    writingMessage("각 문장에 Expression Bank의 영어 표현을 하나 이상 사용해 주세요.");
+    return null;
+  }
+
+  if (!aUsed.some(x => bUsed.some(y => x !== y))) {
+    writingMessage("두 문장에서 서로 다른 목표 표현을 사용해 주세요.");
+    return null;
+  }
+
+  return [a,b];
+}
+
+/* =========================
+   RESULT
+========================= */
+
+function finishActivity() {
+  const writing = getWriting();
+  if (!writing) return;
+
+  finished = true;
+  stopTimer();
+
+  $("finalScore").textContent = score + " / 12";
+  $("finalTime").textContent = "Learning Time: " + formatTime(elapsed);
+
+  $("scoreMessage").textContent =
+    score === 12 ? "Amazing! Perfect Score!" :
+    score >= 10 ? "Excellent! Very well done!" :
+    score >= 7 ? "Good job! Keep practicing!" :
+    "Nice try! Review and try again!";
+
+  $("resultOne").textContent = "1. " + writing[0];
+  $("resultTwo").textContent = "2. " + writing[1];
+
+  const review = $("reviewList");
+  review.replaceChildren();
+
+  answerHistory.forEach(a => {
+    const q = questions[a.index];
+    const item = node("div","review","");
+
+    item.appendChild(node(
+      "strong",a.correct ? "good" : "bad",
+      (a.correct ? "✓ " : "✗ ")+"Question "+(a.index+1)
+    ));
+    item.appendChild(node("p","",q.q));
+
+    if (!a.correct) {
+      item.appendChild(node("p","bad","Your answer: "+q.options[a.selected]));
+    }
+
+    item.appendChild(node("p","good","Correct: "+q.options[q.answer]));
+    item.appendChild(node("p","muted",q.explain));
+    review.appendChild(item);
+  });
+
+  goToStage(4);
+}
+
+function restart() {
+  stopAudio();
+  stopTimer();
+
+  stage = 0;
+  questionIndex = 0;
+  score = 0;
+  locked = false;
+  answerHistory = [];
+  beganAt = null;
+  elapsed = 0;
+  finished = false;
+
+  $("writingOne").value = "";
+  $("writingTwo").value = "";
+  $("starterOne").value = "";
+  $("starterTwo").value = "";
+  $("writingFeedback").replaceChildren();
+
+  updateTimer();
+  goToStage(0);
+}
+
+/* =========================
+   VALIDATION
+========================= */
+
+function checkContent() {
+  if (vocabulary.length !== 6 ||
+      story.length !== 6 ||
+      questions.length !== 12 ||
+      expressionPatterns.length !== 6) {
+    throw new Error("Learning content count is invalid.");
+  }
+
+  questions.forEach((q,i) => {
+    if (q.options.length !== 4 ||
+        !Number.isInteger(q.answer) ||
+        q.answer < 0 ||
+        q.answer > 3 ||
+        q.part !== (i < 6 ? "A" : "B")) {
+      throw new Error("Invalid quiz data at question "+(i+1));
+    }
+  });
+}
+
+/* =========================
+   EVENTS
+========================= */
+
+$("storyPlay").addEventListener("click",() => playAudio(story,"story"));
+$("storyReplay").addEventListener("click",() => playAudio(story,"story"));
+$("storyPause").addEventListener("click",toggleStoryPause);
+$("storyStop").addEventListener("click",stopAudio);
+$("stopAllAudio").addEventListener("click",stopAudio);
+
+document.querySelectorAll(".speed").forEach(button => {
+  button.addEventListener("click",() => {
+    speed = Number(button.dataset.speed);
+
+    document.querySelectorAll(".speed").forEach(b => {
+      const active = b === button;
+      b.classList.toggle("active",active);
+      b.setAttribute("aria-pressed",String(active));
+    });
+
+    // Stop existing speech so the new rate is used
+    // consistently on the next playback.
+    stopAudio();
+    setStatus("Speed: "+speed.toFixed(2)+"×. Press Play to listen.");
+  });
+});
+
+$("goLearn").addEventListener("click",() => {
+  beginTimer();
+  goToStage(1);
+});
+
+$("backRead").addEventListener("click",() => goToStage(0));
+
+$("goQuiz").addEventListener("click",() => {
+  goToStage(2);
+  renderQuiz();
+});
+
+$("questionAudio").addEventListener("click",() => {
+  const q = questions[questionIndex];
+
+  if (q.part === "A") {
+    playAudio(q.q);
+  } else {
+    const correctSentence = q.q.replace(
+      "______",q.options[q.answer]
+    );
+    // For contextual questions, read the question with
+    // a spoken pause instead of revealing the answer.
+    const segments = q.q.split("______");
+    playAudio([
+      segments[0],
+      "blank",
+      segments[1]
+    ]);
+  }
+});
+
+$("nextQuiz").addEventListener("click",() => {
+  if (!locked) return;
+
+  questionIndex++;
+
+  if (questionIndex >= questions.length) {
+    goToStage(3);
+  } else {
+    stopAudio();
+    renderQuiz();
+  }
+});
+
+$("starterOne").addEventListener("change",() =>
+  insertStarter("starterOne","writingOne")
+);
+
+$("starterTwo").addEventListener("change",() =>
+  insertStarter("starterTwo","writingTwo")
+);
+
+$("writingAudio").addEventListener("click",() => {
+  const a = $("writingOne").value.trim();
+  const b = $("writingTwo").value.trim();
+  if (!a && !b) {
+    writingMessage("먼저 문장을 작성해 주세요.");
+    return;
+  }
+  playAudio([a,b]);
+});
+
+$("finishButton").addEventListener("click",finishActivity);
+
+$("resultAudio").addEventListener("click",() => {
+  playAudio([
+    $("resultOne").textContent.replace(/^1\.\s*/,""),
+    $("resultTwo").textContent.replace(/^2\.\s*/,"")
+  ]);
+});
+
+$("restartButton").addEventListener("click",restart);
+
+/* =========================
+   INITIALIZATION
+========================= */
+
+function initialize() {
+  checkContent();
+  renderVocabulary();
+  renderExpressionBank();
+  updateTimer();
+  updateProgress();
+
+  if (audioSupported) {
+    chooseVoice();
+
+    if (typeof speechSynthesis.addEventListener === "function") {
+      speechSynthesis.addEventListener("voiceschanged",chooseVoice);
+    }
+  } else {
+    document.querySelectorAll(
+      ".audio-btn,.speed"
+    ).forEach(button => button.disabled = true);
+
+    setStatus("Audio is not supported in this browser.");
+    $("storyStatus").textContent = "Audio unavailable.";
+  }
+
+  updateAudioControls();
+}
+
+initialize();
+</script>
+</body>
+</html>
